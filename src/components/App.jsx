@@ -44,8 +44,7 @@ export function App() {
         }
     }
    fetchImages(page, query)
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ page, query]);
+  }, [page, query]);
   
      return (
        <div className={css.app}>
