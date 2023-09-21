@@ -25,9 +25,8 @@ export function App() {
       } 
  
  useEffect(() => {
-    if (!query) {
-      return;
-   }
+    if (!query) { return }
+     
    const fetchImages = async () => {
           setIsLoading(true)
           setIsButton(false)
