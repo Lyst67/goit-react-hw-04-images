@@ -27,7 +27,11 @@ export function App() {
  useEffect(() => {
    if (!query) { return }
 
-     const fetchImages = async (page, query) => {
+    
+   fetchImages(page, query)
+ }, [page, query]);
+  
+   const fetchImages = async (page, query) => {
           setIsLoading(true)
           setIsButton(false)
         try {
@@ -43,8 +47,6 @@ export function App() {
             setIsLoading(false)
         }
     }
-   fetchImages(page, query)
-  }, [page, query]);
   
      return (
        <div className={css.app}>
