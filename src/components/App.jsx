@@ -28,7 +28,7 @@ export function App() {
     if (!query) {
       return;
    }
-  async function fetchImages() {
+   const fetchImages = async () => {
           setIsLoading(true)
           setIsButton(false)
         try {
