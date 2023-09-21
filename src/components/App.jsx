@@ -24,12 +24,11 @@ export function App() {
           setPage(prev => prev + 1) 
       } 
  
-  useEffect(() => {
-    if (!query) { return }
-      fetchImages()
-  }, [page, query])
-  
-  const fetchImages = async () => {
+ useEffect(() => {
+    if (!query) {
+      return;
+   }
+  async function fetchImages() {
           setIsLoading(true)
           setIsButton(false)
         try {
@@ -45,6 +44,25 @@ export function App() {
             setIsLoading(false)
         }
     }
+    fetchImages()
+  }, [page, query]);
+  
+  // const fetchImages = async () => {
+  //         setIsLoading(true)
+  //         setIsButton(false)
+  //       try {
+  //         const data = await getImageBySearch(query, page) 
+  //         if (!data.hits.length) {
+  //             alert('Opps! There are no images for your request! Please try again!')
+  //          return  
+  //           }
+  //         setGallery(prev => [...prev, ...data.hits])  
+  //         setIsButton(page < Math.ceil(data.totalHits / 12))
+  //       } catch (error) { setError(error.response.data)} 
+  //       finally {
+  //           setIsLoading(false)
+  //       }
+  //   }
   
      return (
        <div className={css.app}>
