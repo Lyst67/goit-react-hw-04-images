@@ -43,7 +43,8 @@ export function App() {
             setIsLoading(false)
         }
     }
-  fetchImages(page, query)
+   fetchImages(page, query)
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ page, query]);
   
      return (
