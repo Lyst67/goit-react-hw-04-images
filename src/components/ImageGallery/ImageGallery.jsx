@@ -1,6 +1,5 @@
 import React from "react"
-import  ImageGalleryItem  from "../ImageGalleryItem/ImageGalleryItem"
-
+import  {ImageGalleryItem}  from "../ImageGalleryItem/ImageGalleryItem"
 import css from './ImageGallery.module.css'
 
 export const ImageGallery = ({gallery}) => {
@@ -11,8 +10,7 @@ export const ImageGallery = ({gallery}) => {
                     {gallery.map((image) => (
                 < ImageGalleryItem image={image} key={image.id} />
             ))}
-                </ul>
-                 
+                </ul> 
            </div> 
     )  
     } 

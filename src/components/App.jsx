@@ -1,79 +1,61 @@
-import { Component } from "react";
-import  Searchbar  from "./Searchbar/Searchbar";
+import React, {useState, useEffect} from "react";
+import { Searchbar }  from "./Searchbar/Searchbar";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { getImageBySearch } from "api/api";
 import { Loader } from "./Loader/Loader";
 import { Button } from "./Button/Button";
 import css from "./App.module.css"
 
-class App extends Component {
-  state = {
-    gallery: [], query: "", page: 1,
-    isLoading: false, error: false, isButton: false
+export function App() {
+  const [gallery, setGallery] = useState([])
+  const [query, setQuery] = useState("")
+  const [page, setPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [isButton, setIsButton] = useState(false)
+
+  const handleSetSearchQuery = (value) => {
+    setQuery(value)
+    setGallery([])
+      setPage(1)
   }
+
+   const handleLoadMore = () => {
+          setPage(prev => prev + 1) 
+      } 
+ 
+  useEffect(() => {
+    if (!query) { return }
+      fetchImages()
+  }, [page, query])
   
-  componentDidUpdate(_, prevState) {
-        if (this.state.query === "") {
-            alert("Fill in the field, please!")
-            return
-        }
-        if (prevState.query !== this.state.query) {
-          this.setState({ page: 1, gallery: [] })
-           if (this.state.page === 1) {
-        this.fetchImages();
-      }
-        } else {
-            if (prevState.page !== this.state.page)
-            {this.fetchImages()} 
-          }  
-     }
-  
-    fetchImages = async () => {
+  const fetchImages = async () => {
+          setIsLoading(true)
+          setIsButton(false)
         try {
-             this.setState({ isLoading: true })
-          const data = await getImageBySearch(this.state.query, this.state.page) 
-            if (data.hits.length === 0) {
+          const data = await getImageBySearch(query, page) 
+          if (!data.hits.length) {
               alert('Opps! There are no images for your request! Please try again!')
            return  
             }
-
-          this.setState((prev) => ({
-            gallery: [...prev.gallery, ...data.hits],
-            isButton: [...prev.gallery, ...data.hits].length < data.totalHits,
-          })) 
-            // if ([...this.state.gallery, ...data.hits].length >= data.totalHits)
-            //  { this.setState({ isButton: false })
-            //     return
-            // }   
-        } catch (error) { this.setState({ error: error.response.data })} 
+          setGallery(prev => [...prev, ...data.hits])  
+          setIsButton(page < Math.ceil(data.totalHits / 12))
+        } catch (error) { setError(error.response.data)} 
         finally {
-            this.setState({ isLoading: false})
+            setIsLoading(false)
         }
     }
   
-  handleSetSearchQuery = (value) => {
-    this.setState({ query: value })
-  }
-  
-   handleLoadMore = () => {
-          this.setState(prevState => ({
-      page: prevState.page + 1,
-    }))  
-    }
-
-  render() {
-    const {isLoading, error, isButton } = this.state
      return (
        <div className={css.app}>
-         <Searchbar onSubmit={this.handleSetSearchQuery} />
+         <Searchbar onSubmit={handleSetSearchQuery} />
          {error && <h1>{error}</h1>}
          {isLoading && ( <Loader/>)}
-         <ImageGallery gallery={this.state.gallery} />
-         {isButton && (<Button handleLoadMore={this.handleLoadMore} />)} 
+         <ImageGallery gallery={gallery} />
+         {isButton && (<Button handleLoadMore={handleLoadMore} />)} 
     </div>
   );
   }
  
-};
 
-export default App
+

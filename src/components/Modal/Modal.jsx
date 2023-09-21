@@ -1,39 +1,34 @@
-import { Component } from "react"
+import React, { useEffect} from "react"
 import css from "./Modal.module.css"
 
- class Modal extends Component {
-  
-   componentDidMount() {
-     window.addEventListener("keydown", this.handleKeydown)
-   }
-   componentWillUnmount(){
-     window.removeEventListener("keydown", this.handleKeydown)
-   }
-
-   handleKeydown = (event) => {
+export function Modal({ onShowModal, largImg, tags }) {
+   
+  useEffect(() => {
+     function handleKeydown(event) {
      if (event.code === "Escape")
-       this.props.toggleModal()
+      onShowModal()
+  }
+     window.addEventListener("keydown", handleKeydown)
+     return () => {
+       window.removeEventListener("keydown", handleKeydown)
+     }
+   }, [onShowModal]) 
+   
+    const handleOvarlayClick = (event) => {
+     if (event.target === event.currentTarget) {
+       onShowModal()
+     }
    }
-
-  //  handleOvarlayClick = (event) => {
-  //    if (event.target === event.currentTarget) {
-  //      this.props.toggleModal()
-  //    }
-  //  }
    
-   
-   render() {
-     const {largImg, tags, toggleModal} = this.props
      return (
-        <div className={css.overlay} onClick={this.handleOvarlayClick}>
+        <div className={css.overlay} onClick={handleOvarlayClick}>
   <div className={css.modal}>
     <img src={largImg} alt={tags} />
         </div>
-        <button type="button" className={css.modal_btn} onClick={toggleModal}>X</button>
+        <button type="button" className={css.modal_btn} onClick={onShowModal}>X</button>
 </div>
     )
 }
-  }
+ 
    
 
-export default Modal
