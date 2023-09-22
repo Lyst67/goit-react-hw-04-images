@@ -27,7 +27,7 @@ export function App() {
  useEffect(() => {
    if (!query) { return }
 
-    async function fetchImages(query, page) {
+    async function fetchImages() {
     setIsLoading(true);
     setIsButton(false);
     try {
@@ -45,6 +45,7 @@ export function App() {
   }
 
    fetchImages()
+   
  }, [query, page]);
   
   
